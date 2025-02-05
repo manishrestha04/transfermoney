@@ -1,0 +1,25 @@
+flows:
+  pattern_chitchat:
+    description: Conversation repair flow for off-topic interactions that won't disrupt the main conversation. should not respond to greetings or anything else for which there is a flow defined
+    name: pattern chitchat
+    steps:
+      - action: action_default_fallback
+  pattern_search:
+    description: Flow for handling knowledge-based questions
+    name: pattern search
+    steps:
+      - action: action_default_fallback
+
+  # pattern_greet:
+  #   description: Flow for handling greetings
+  #   name: pattern greet
+  #   steps:
+  #     - action: utter_greet
+
+  # pattern_goodbye:
+  #   description: Flow for handling goodbyes
+  #   name: pattern goodbye
+  #   steps:
+  #     - action: utter_goodbye
+
+ 

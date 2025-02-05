@@ -1,0 +1,74 @@
+version: "3.1"
+
+slots:
+  recipient:
+    type: text
+    mappings:
+      - type: from_llm
+  amount:
+    type: float
+    mappings:
+      - type: from_llm
+  final_confirmation:
+    type: bool
+    mappings:
+      - type: from_llm
+  has_sufficient_funds:
+    type: bool
+    mappings:
+      - type: custom
+  pin:
+    type: text
+    mappings:
+      - type: from_llm
+  user_id:
+    type: text
+  user_name:
+    type: text
+  user_balance:
+    type: float
+  user_pin:
+    type: text  
+  pin_verified:
+    type: bool
+
+actions:  
+  - action_set_user_id
+  - action_fetch_user_balance
+  - action_check_sufficient_funds
+  - action_verify_pin
+  - action_transfer_money
+  - action_default_fallback
+  - action_transcribe_audio
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I help you today?"
+
+  utter_goodbye:
+    - text: "Goodbye! Have a nice day ahead."
+    
+  utter_ask_recipient:
+    - text: "Who would you like to send money to?"
+
+  utter_ask_amount:
+    - text: "How much would you like to send?"
+
+  utter_transfer_complete:
+    - text: "The transfer was successful. You've sent {amount} to {recipient}."
+
+  utter_transfer_cancelled:
+    - text: "The transfer has been cancelled."
+  
+  utter_insufficient_funds:
+    - text: "You don't have enough funds to complete this transfer."
+
+  utter_ask_final_confirmation:
+    - text: "Are you sure you want to proceed with the transfer of {amount} to {recipient}?"
+  
+  utter_ask_pin:
+    - text: "Please enter your PIN to authorize the transfer."
+  
+  utter_incorrect_pin:
+    - text: "The PIN you entered is incorrect. Please try again."
+

@@ -1,0 +1,17 @@
+recipe: default.v1
+language: en
+pipeline:
+- name: SingleStepLLMCommandGenerator
+  llm:
+    model_group: rasa_command_generation_model
+  flow_retrieval:
+    active: false
+
+policies:
+  - name: FlowPolicy
+# - name: FallbackPolicy
+#   threshold: 0.3  # You can adjust this based on how confident you want the model to be
+#   ambiguity_threshold: 0.1
+#   fallback_action_name: "action_sorry_couldnt_answer"
+
+assistant_id: 20250203-132445-bold-brush

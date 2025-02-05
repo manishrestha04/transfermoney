@@ -1,0 +1,101 @@
+flows:
+  transfer_money:
+    description: Help users send money to friends and family.
+    persisted_slots:
+      - recipient
+      - amount
+      - final_confirmation
+
+    steps:
+      - action: action_set_user_id  # Set the user_id slot
+        id: action_set_user_id
+        next: collect_recipient
+
+      - collect: recipient
+        id: collect_recipient
+        description: The recipient of the money transfer.
+        next: ask_amount
+      
+      - collect: amount
+        id: ask_amount
+        description: The number of US dollars to send.
+        next: action_fetch_user_balance
+
+      - action: action_fetch_user_balance
+        id: action_fetch_user_balance
+        next: action_check_sufficient_funds
+
+      - action: action_check_sufficient_funds
+        id: action_check_sufficient_funds
+        next:
+          - if: not slots.has_sufficient_funds
+            then:
+              - action: utter_insufficient_funds
+              - set_slots:
+                - amount: null
+                next: ask_amount
+          - else: ask_pin
+
+      - collect: pin
+        id: ask_pin
+        description: "Please enter your PIN to authorize the transfer."
+        next:
+          - if: not slots.pin
+            then:
+              - action: utter_ask_pin
+                next: ask_pin
+          - else: verify_pin
+
+      - action: action_verify_pin
+        id: verify_pin
+        next:
+          - if: not slots.pin_verified
+            then:
+              - action: utter_incorrect_pin
+              - set_slots:
+                  - pin: null
+                next: ask_pin
+          - else: final_confirmation
+
+
+      - collect: final_confirmation
+        id: final_confirmation
+        description: Confirm the transaction.
+        next:
+          - if: not slots.final_confirmation
+            then:
+              - action: utter_transfer_cancelled
+                next: END
+          - else: transfer_successful
+
+      - action: action_transfer_money
+        id: transfer_successful
+
+
+  check_balance:
+    description: Help users check their account balance.
+    steps:
+
+      - action: action_set_user_id  # Set the user_id slot
+        id: action_set_user_id
+        next: action_fetch_user_balance
+
+      - action: action_fetch_user_balance
+        id: action_fetch_user_balance
+
+
+  greet:
+    description: handle greetings like "hi" or "hello" from the user 
+    steps:
+      - action: utter_greet
+
+  goodbye:
+    description: handle goodbyes like "bye" or "goodbye" from the user
+    steps:
+      - action: utter_goodbye
+
+  fallback:
+    description: A fallback flow for unrecognized input.
+    steps:
+      - action: action_default_fallback
+        next: END
